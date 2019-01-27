@@ -200,6 +200,13 @@ on property:sys.boot_completed=1
 
     setprop sys.io.scheduler "bfq"
 
+    # Update cpusets now that boot is complete and we want better load balancing
+    write /dev/cpuset/top-app/cpus 0-3
+    write /dev/cpuset/foreground/cpus 0-2
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+    write /dev/cpuset/restricted/cpus 0-1
+
 service dashd /sbin/dashd
     class core
     critical
@@ -220,6 +227,3 @@ service remosaic_daemon /vendor/bin/remosaic_daemon
 
 on property:vendor.post_boot.parsed=*
     setprop sys.post_boot.parsed ${vendor.post_boot.parsed}
-
-on property:sys.listeners.registered=*
-    setprop vendor.sys.keymaster.loaded ${sys.listeners.registered}
