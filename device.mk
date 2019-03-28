@@ -140,7 +140,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
     $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
-    $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/audio/etc/audio_policy_configuration.xml \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/listen_platform_info.xml \
     $(LOCAL_PATH)/audio/mixer_paths_tasha.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_tasha.xml \
@@ -184,6 +183,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.vc_call_vol_steps=7 \
     audio.safemedia.bypass=true
 
+# Additional native libraries
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
+
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService \
@@ -200,7 +203,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Camera
 PRODUCT_PACKAGES += \
     Snap \
-    libcamera_parameters_shim \
     libcamera_shim \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.4-service.oneplus3
@@ -316,11 +318,12 @@ PRODUCT_PACKAGES += \
 
 # Lineage hardware
 PRODUCT_PACKAGES += \
+    vendor.lineage.touch@1.0-service.oneplus3 \
     vendor.lineage.trust@1.0-service
 
-# LiveDisplay native
+# LiveDisplay
 PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@1.0-service-sdm
+    vendor.lineage.livedisplay@2.0-service.oneplus3
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -355,6 +358,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/libnfc-nci.conf \
     $(LOCAL_PATH)/configs/nfc/libnfc-nxp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-nxp.conf
 
+# OEM Unlock reporting
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.oem_unlock_supported=1
+
 # OMX
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
@@ -374,7 +381,6 @@ PRODUCT_PACKAGES += \
     android.hardware.power@1.1-service-qti
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/perfboostsconfig.xml:$(TARGET_COPY_OUT_VENDOR)/etc/perf/perfboostsconfig.xml \
     $(LOCAL_PATH)/configs/powerhint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.xml
 
 # Qualcomm
@@ -455,6 +461,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service.basic
 
+# Verity
+PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
+$(call inherit-product, build/target/product/verity.mk)
+
 # Vibrator
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl \
@@ -488,7 +498,16 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/wifi/move_wifi_data.sh:system/bin/move_wifi_data.sh \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+
+# WiFi Display
+PRODUCT_PACKAGES += \
+    libaacwrapper \
+    libnl
+
+PRODUCT_BOOT_JARS += \
+    WfdCommon
 
 # Inherit from oppo-common
 $(call inherit-product, device/oppo/common/common.mk)
