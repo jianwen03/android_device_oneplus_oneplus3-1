@@ -178,7 +178,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     vendor.audio.hw.aac.encoder=true \
     ro.af.client_heap_size_kbyte=7168 \
     persist.vendor.audio.hw.binder.size_kbyte=1024 \
-    ro.config.media_vol_steps=100 \
+    ro.config.media_vol_steps=50 \
     ro.config.vc_call_vol_steps=7 \
     audio.safemedia.bypass=true
 
